@@ -1,15 +1,19 @@
 const feedbackForm = document.querySelector('.feedback-form');
 
+
+let formData = {
+    email: '',
+    message: ''
+};
+
 checkInputStart();
 
 feedbackForm.addEventListener('input', fieldUserInfo);
 feedbackForm.addEventListener('submit', sendUserInfo);
 
 function fieldUserInfo() {
-    const formData = {
-        email: (feedbackForm.elements.email.value).trim(),
-        message: (feedbackForm.elements.message.value).trim(),
-    }
+    formData.email = (feedbackForm.elements.email.value).trim();
+    formData.message = (feedbackForm.elements.message.value).trim();
 
     localStorage.setItem('feedback-form-state', JSON.stringify(formData));
 }
@@ -17,9 +21,8 @@ function fieldUserInfo() {
 function sendUserInfo(event) {
     event.preventDefault();
 
-    const email = (feedbackForm.elements.email.value).trim();
-    const message = (feedbackForm.elements.message.value).trim();
-
+    const email = formData.email;
+    const message = formData.message;
 
     if (!email || !message) {
         alert('Please, fill in all fields before sending!');
@@ -30,12 +33,17 @@ function sendUserInfo(event) {
     console.log(userInfo);
 
     feedbackForm.reset();
-    localStorage.clear();
+    formData = { email: '', message: '' }; 
+    localStorage.setItem('feedback-form-state', JSON.stringify(formData)); 
 }
 
 function checkInputStart() {
+
     const localInfo = JSON.parse(localStorage.getItem("feedback-form-state")) ?? {};
 
-    feedbackForm.elements.email.value = localInfo.email || '';
-    feedbackForm.elements.message.value = localInfo.message || '';
+    formData.email = localInfo.email || '';
+    formData.message = localInfo.message || '';
+
+    feedbackForm.elements.email.value = formData.email;
+    feedbackForm.elements.message.value = formData.message;
 }
